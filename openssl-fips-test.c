@@ -92,6 +92,28 @@ test_crypto_is_fips_jailed(void)
 	return true;
 }
 
+static bool
+test_loading_providers_is_meaningless(void)
+{
+	OSSL_PROVIDER *legacy = OSSL_PROVIDER_load(NULL, "legacy");
+	if (legacy == NULL)
+		return true;
+
+	EVP_MD *whirlpool = EVP_MD_fetch(NULL, "WHIRLPOOL", "provider=legacy");
+	if (whirlpool != NULL)
+		return false;
+
+	OSSL_PROVIDER *base = OSSL_PROVIDER_load(NULL, "base");
+	if (base == NULL)
+		return true;
+
+	EVP_MD *md5 = EVP_MD_fetch(NULL, "MD5", "provider=base");
+	if (md5 != NULL)
+		return false;
+
+	return true;
+}
+
 static const struct test_ tests[] = {
 	{
 		.name = "FIPS module is available",
@@ -127,6 +149,11 @@ static const struct test_ tests[] = {
 		.name = "cryptographic routines are restricted to the FIPS module",
 		.expected = true,
 		.test_fn = test_crypto_is_fips_jailed,
+	},
+	{
+		.name = "using OSSL_PROVIDER_load cannot break out of the jail",
+		.expected = true,
+		.test_fn = test_loading_providers_is_meaningless,
 	},
 };
 
