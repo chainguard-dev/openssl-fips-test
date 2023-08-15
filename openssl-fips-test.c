@@ -26,6 +26,17 @@ test_fips_module_is_available(void)
 }
 
 static bool
+test_fips_module_is_enabled(void)
+{
+	OSSL_LIB_CTX *ctx = OSSL_LIB_CTX_get0_global_default();
+
+	if (!EVP_default_properties_is_fips_enabled(ctx))
+		return false;
+
+	return true;
+}
+
+static bool
 test_legacy_module_is_available(void)
 {
 	OSSL_LIB_CTX *ctx = OSSL_LIB_CTX_get0_global_default();
@@ -119,6 +130,11 @@ static const struct test_ tests[] = {
 		.name = "FIPS module is available",
 		.expected = true,
 		.test_fn = test_fips_module_is_available,
+	},
+	{
+		.name = "EVP_default_properties_is_fips_enabled returns true",
+		.expected = true,
+		.test_fn = test_fips_module_is_enabled,
 	},
 	{
 		.name = "legacy cryptographic routines are not available",
