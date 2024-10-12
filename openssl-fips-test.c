@@ -161,7 +161,7 @@ static void print_module_version(void) {
         for (int i = 0; i<strlen(encoded_name); i++) if (encoded_name[i] == ' ') encoded_name[i] = '+';
 
         fprintf(stderr, "\nLocate applicable CMVP certificates at\n");
-        fprintf(stderr, "    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=%s&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=%s\n", encoded_name, vers);
+        fprintf(stderr, "    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=%s&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=%.5s\n", encoded_name, vers);
 
         return;
  err:

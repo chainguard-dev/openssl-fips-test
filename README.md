@@ -94,3 +94,50 @@ Module details:
 Locate applicable CMVP certificates at
     https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL+FIPS+Provider&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=3.0.9
 ```
+
+Example output on Ubuntu Pro FIPS instance:
+
+```
+./openssl-fips-test
+Checking OpenSSL lifecycle assurance.
+*** Running check: FIPS module is available...
+    SHA1 : (KAT_Digest) : Pass
+    SHA2 : (KAT_Digest) : Pass
+    SHA3 : (KAT_Digest) : Pass
+    AES_GCM : (KAT_Cipher) : Pass
+    AES_ECB_Decrypt : (KAT_Cipher) : Pass
+    RSA : (KAT_Signature) :     RNG : (Continuous_RNG_Test) : Pass
+    RNG : (Continuous_RNG_Test) : Pass
+    RNG : (Continuous_RNG_Test) : Pass
+Pass
+    ECDSA : (KAT_Signature) : Pass
+    ECDSA : (KAT_Signature) : Pass
+    TLS13_KDF_EXTRACT : (KAT_KDF) : Pass
+    TLS13_KDF_EXPAND : (KAT_KDF) : Pass
+    TLS12_PRF : (KAT_KDF) : Pass
+    PBKDF2 : (KAT_KDF) : Pass
+    SSHKDF : (KAT_KDF) : Pass
+    KBKDF : (KAT_KDF) : Pass
+    HKDF : (KAT_KDF) : Pass
+    SSKDF : (KAT_KDF) : Pass
+    X963KDF : (KAT_KDF) : Pass
+    X942KDF : (KAT_KDF) : Pass
+    HASH : (DRBG) : Pass
+    CTR : (DRBG) : Pass
+    HMAC : (DRBG) : Pass
+    DH : (KAT_KA) : Pass
+    ECDH : (KAT_KA) : Pass
+    HMAC : (Module_Integrity) : Pass
+    Running check: FIPS module is available... passed.
+*** Running check: EVP_default_properties_is_fips_enabled returns true... passed.
+*** Running check: verify unapproved cryptographic routines are not available by default (e.g. MD5)... passed.
+
+Lifecycle assurance satisfied.
+Module details:
+	name:     	Ubuntu 22.04 OpenSSL Cryptographic Module
+	version:  	3.0.5-0ubuntu0.1+Fips2.1
+	build:    	3.0.5-0ubuntu0.1+Fips2.1
+
+Locate applicable CMVP certificates at
+    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=Ubuntu+22.04+OpenSSL+Cryptographic+Module&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=3.0.5
+```
