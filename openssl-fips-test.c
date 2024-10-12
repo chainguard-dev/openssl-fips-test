@@ -148,6 +148,7 @@ static void print_module_version(void) {
         if (!OSSL_PROVIDER_get_params(prov, params))
                 goto err;
 
+        fprintf(stderr, "Module details:\n");
         if (OSSL_PARAM_modified(params))
                 fprintf(stderr, "\t%-10s\t%s\n", "name:", name);
         if (OSSL_PARAM_modified(params + 1))
@@ -159,8 +160,8 @@ static void print_module_version(void) {
         snprintf(encoded_name, strlen(name)+1, "%s", name);
         for (int i = 0; i<strlen(encoded_name); i++) if (encoded_name[i] == ' ') encoded_name[i] = '+';
 
-        fprintf(stderr, "Locate aplicable CMVP certificates at\n\n");
-        fprintf(stderr, "https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=%s&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=%s\n", encoded_name, vers);
+        fprintf(stderr, "\nLocate applicable CMVP certificates at\n");
+        fprintf(stderr, "    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=%s&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=%s\n", encoded_name, vers);
 
         return;
  err:
@@ -194,7 +195,7 @@ main(int argc, const char *argv[])
 	}
 
 	if (rc == EXIT_SUCCESS) {
-		fprintf(stderr, "Lifecycle assurance satisfied.\n");
+		fprintf(stderr, "\nLifecycle assurance satisfied.\n");
 		print_module_version();
 	}
 
