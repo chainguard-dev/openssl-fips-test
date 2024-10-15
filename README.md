@@ -28,8 +28,8 @@ Prior to loading any providers, a callback is added to capture output of KAT
 (known answer tests) selftests.
 
 It then loads default OpenSSL library contects, and verifies that a FIPS
-provider is loaded. That legacy provider is not loaded, and that unapproved
-algorithms are not available.
+provider is loaded. And checks that by default FIPS variants of algorithms are
+used.
 
 It also retrieves FIPS module information and returns CMVP search URL where one
 should be able to find applicable certificates.
