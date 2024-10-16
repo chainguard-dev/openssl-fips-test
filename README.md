@@ -24,30 +24,120 @@ headers installed in order to build this tool, as well as a C compiler.
 
 ## About this tool
 
-This code is a test suite designed to validate the configuration and operational status of the OpenSSL cryptographic library, particularly focusing on its compliance with the Federal Information Processing Standards (FIPS). It performs a series of checks to ensure that the OpenSSL library is correctly configured for FIPS mode, which is a requirement for many government and industry sectors that handle sensitive information. Here's a breakdown of its components and functionality:
+Prior to loading any providers, a callback is added to capture output of KAT
+(known answer tests) selftests.
 
-### Includes and Global Definitions
-- The code includes standard libraries for boolean types, input/output operations, and standard library functions.
-- It also includes OpenSSL headers for cryptographic operations, specifically for working with encryption and provider contexts.
-- A `struct test_` is defined to encapsulate test cases, including a test name, expected outcome, and a pointer to the test function.
+It then loads default OpenSSL library contects, and verifies that a FIPS
+provider is loaded. And checks that by default FIPS variants of algorithms are
+used.
 
-### Test Functions
-Each test function performs a specific check related to FIPS compliance or cryptographic provider availability:
-- **test_fips_module_is_available**: Checks if the FIPS module is available in the OpenSSL context.
-- **test_fips_module_is_enabled**: Verifies if FIPS mode is enabled by default in the OpenSSL context.
-- **test_legacy_module_is_available**: Checks for the availability of legacy cryptographic algorithms, which are not allowed in FIPS mode.
-- **test_unspec_md5_hashing_xfail**: Attempts to fetch the MD5 hashing algorithm without specifying a provider, expecting failure since MD5 is not FIPS compliant.
-- **test_fips_md5_hashing_xfail**: Tries to fetch the MD5 hashing algorithm from the FIPS provider, expecting failure.
-- **test_fips_sha2_512_hashing_xpass**: Ensures the SHA2-512 hashing algorithm is available from the FIPS provider, expecting success.
-- **test_escape_fips**: Checks if requesting MD5 hashing from the default provider is rejected, as MD5 is not FIPS compliant.
-- **test_crypto_is_fips_jailed**: Verifies that cryptographic operations are restricted to the FIPS module, ensuring compliance.
-- **test_loading_providers_is_meaningless**: Tests if loading providers (e.g., "legacy" or "base") can circumvent FIPS restrictions, expecting that it cannot.
+It also retrieves FIPS module information and returns CMVP search URL where one
+should be able to find applicable certificates.
 
-### Main Function
-- The `main` function iterates over the array of test cases, executing each one.
-- It prints the name of each test before running it and checks the test result against the expected outcome.
-- If a test fails (i.e., the actual outcome does not match the expected outcome), the program prints a failure message and exits with `EXIT_FAILURE`.
-- If all tests pass, it prints a success message indicating that OpenSSL is correctly configured for FIPS compliance and exits with `EXIT_SUCCESS`.
+## Example output
 
-### Purpose and Importance
-This test suite is crucial for verifying the FIPS compliance of the OpenSSL configuration in environments where strict cryptographic standards are required. FIPS compliance ensures that cryptographic software meets specific security standards, making this validation process essential for applications in government, finance, and other sectors handling sensitive or regulated data.
+Uncertified systems will typically report this:
+
+```
+Checking OpenSSL lifecycle assurance.
+*** Running check: FIPS module is available...
+    Running check: FIPS module is available... failed.
+*** Running check: EVP_default_properties_is_fips_enabled returns true... failed.
+*** Running check: verify unapproved cryptographic routines are not available by default (e.g. MD5)... failed.
+```
+
+Example of systems using OpenSSL Project CMVP certificate:
+
+```
+# ./openssl-fips-test
+Checking OpenSSL lifecycle assurance.
+*** Running check: FIPS module is available...
+    HMAC : (Module_Integrity) : Pass
+    SHA1 : (KAT_Digest) : Pass
+    SHA2 : (KAT_Digest) : Pass
+    SHA3 : (KAT_Digest) : Pass
+    TDES : (KAT_Cipher) : Pass
+    AES_GCM : (KAT_Cipher) : Pass
+    AES_ECB_Decrypt : (KAT_Cipher) : Pass
+    RSA : (KAT_Signature) :     RNG : (Continuous_RNG_Test) : Pass
+Pass
+    ECDSA : (PCT_Signature) : Pass
+    DSA : (PCT_Signature) : Pass
+    TLS13_KDF_EXTRACT : (KAT_KDF) : Pass
+    TLS13_KDF_EXPAND : (KAT_KDF) : Pass
+    TLS12_PRF : (KAT_KDF) : Pass
+    PBKDF2 : (KAT_KDF) : Pass
+    SSHKDF : (KAT_KDF) : Pass
+    KBKDF : (KAT_KDF) : Pass
+    HKDF : (KAT_KDF) : Pass
+    SSKDF : (KAT_KDF) : Pass
+    X963KDF : (KAT_KDF) : Pass
+    X942KDF : (KAT_KDF) : Pass
+    HASH : (DRBG) : Pass
+    CTR : (DRBG) : Pass
+    HMAC : (DRBG) : Pass
+    DH : (KAT_KA) : Pass
+    ECDH : (KAT_KA) : Pass
+    RSA_Encrypt : (KAT_AsymmetricCipher) : Pass
+    RSA_Decrypt : (KAT_AsymmetricCipher) : Pass
+    RSA_Decrypt : (KAT_AsymmetricCipher) : Pass
+    Running check: FIPS module is available... passed.
+*** Running check: EVP_default_properties_is_fips_enabled returns true... passed.
+*** Running check: verify unapproved cryptographic routines are not available by default (e.g. MD5)... passed.
+
+Lifecycle assurance satisfied.
+Module details:
+	name:     	OpenSSL FIPS Provider
+	version:  	3.0.9
+	build:    	3.0.9
+
+Locate applicable CMVP certificates at
+    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL+FIPS+Provider&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=3.0.9
+```
+
+Example output on Ubuntu Pro FIPS instance:
+
+```
+./openssl-fips-test
+Checking OpenSSL lifecycle assurance.
+*** Running check: FIPS module is available...
+    SHA1 : (KAT_Digest) : Pass
+    SHA2 : (KAT_Digest) : Pass
+    SHA3 : (KAT_Digest) : Pass
+    AES_GCM : (KAT_Cipher) : Pass
+    AES_ECB_Decrypt : (KAT_Cipher) : Pass
+    RSA : (KAT_Signature) :     RNG : (Continuous_RNG_Test) : Pass
+    RNG : (Continuous_RNG_Test) : Pass
+    RNG : (Continuous_RNG_Test) : Pass
+Pass
+    ECDSA : (KAT_Signature) : Pass
+    ECDSA : (KAT_Signature) : Pass
+    TLS13_KDF_EXTRACT : (KAT_KDF) : Pass
+    TLS13_KDF_EXPAND : (KAT_KDF) : Pass
+    TLS12_PRF : (KAT_KDF) : Pass
+    PBKDF2 : (KAT_KDF) : Pass
+    SSHKDF : (KAT_KDF) : Pass
+    KBKDF : (KAT_KDF) : Pass
+    HKDF : (KAT_KDF) : Pass
+    SSKDF : (KAT_KDF) : Pass
+    X963KDF : (KAT_KDF) : Pass
+    X942KDF : (KAT_KDF) : Pass
+    HASH : (DRBG) : Pass
+    CTR : (DRBG) : Pass
+    HMAC : (DRBG) : Pass
+    DH : (KAT_KA) : Pass
+    ECDH : (KAT_KA) : Pass
+    HMAC : (Module_Integrity) : Pass
+    Running check: FIPS module is available... passed.
+*** Running check: EVP_default_properties_is_fips_enabled returns true... passed.
+*** Running check: verify unapproved cryptographic routines are not available by default (e.g. MD5)... passed.
+
+Lifecycle assurance satisfied.
+Module details:
+	name:     	Ubuntu 22.04 OpenSSL Cryptographic Module
+	version:  	3.0.5-0ubuntu0.1+Fips2.1
+	build:    	3.0.5-0ubuntu0.1+Fips2.1
+
+Locate applicable CMVP certificates at
+    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=Ubuntu+22.04+OpenSSL+Cryptographic+Module&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=3.0.5
+```
