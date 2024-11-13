@@ -92,7 +92,7 @@ Module details:
 	build:    	3.0.9
 
 Locate applicable CMVP certificates at
-    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL+FIPS+Provider&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=3.0.9
+    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=3.0.9
 ```
 
 Example output on Ubuntu Pro FIPS instance:
@@ -139,5 +139,5 @@ Module details:
 	build:    	3.0.5-0ubuntu0.1+Fips2.1
 
 Locate applicable CMVP certificates at
-    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=Ubuntu+22.04+OpenSSL+Cryptographic+Module&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=3.0.5
+    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=3.0.5
 ```
