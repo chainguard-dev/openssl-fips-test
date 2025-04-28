@@ -22,6 +22,7 @@
 #include <openssl/evp.h>
 #include <openssl/provider.h>
 #include <openssl/self_test.h>
+#include <openssl/opensslv.h>
 
 struct test_ {
 	const char *name;
@@ -131,12 +132,22 @@ static int self_test_events(const OSSL_PARAM params[], void *arg)
         return false;
 }
 
+static void print_base_version(void) {
+        fprintf(stderr, "\nPublic OpenSSL API for TLS and cryptographic routines (libssl.so & libcrypto.so):\n");
+        fprintf(stderr, "\t%-10s\t%s\n", "name:", OpenSSL_version(OPENSSL_VERSION));
+        fprintf(stderr, "\t%-10s\t%s\n", "version:", OpenSSL_version(OPENSSL_VERSION_STRING));
+        fprintf(stderr, "\t%-10s\t%s\n", "full-version:", OpenSSL_version(OPENSSL_FULL_VERSION_STRING));
+        fprintf(stderr, "\t%-10s\t%s\n", "built-on:", OpenSSL_version(OPENSSL_BUILT_ON) + 10);
+        fprintf(stderr, "\n");
+}
+
 static void print_module_version(void) {
 
         OSSL_PROVIDER *prov = NULL;
         OSSL_PARAM params[4], *p = params;
         char *name = "", *vers = "", *build = "";
 
+        fprintf(stderr, "FIPS cryptographic Module details (fips.so):\n");
         prov = OSSL_PROVIDER_load(NULL, "fips");
         if (prov == NULL)
                 goto err;
@@ -147,8 +158,6 @@ static void print_module_version(void) {
         *p = OSSL_PARAM_construct_end();
         if (!OSSL_PROVIDER_get_params(prov, params))
                 goto err;
-
-        fprintf(stderr, "Module details:\n");
         if (OSSL_PARAM_modified(params))
                 fprintf(stderr, "\t%-10s\t%s\n", "name:", name);
         if (OSSL_PARAM_modified(params + 1))
@@ -161,14 +170,14 @@ static void print_module_version(void) {
 
         return;
  err:
-        fprintf(stderr, "Failed to retreive module version information\n");
+        fprintf(stderr, "\tFailed to retrieve cryptographic module version information\n");
 }
 
 
 int
 main(int argc, const char *argv[])
 {
-        int rc = EXIT_SUCCESS;
+	int rc = EXIT_SUCCESS;
 
 	fprintf(stderr, "Checking OpenSSL lifecycle assurance.\n");
 
@@ -190,9 +199,10 @@ main(int argc, const char *argv[])
 		}
 	}
 
+	print_base_version();
+	print_module_version();
 	if (rc == EXIT_SUCCESS) {
 		fprintf(stderr, "\nLifecycle assurance satisfied.\n");
-		print_module_version();
 	}
 
 	return rc;
