@@ -166,7 +166,10 @@ static void print_module_version(void) {
                 fprintf(stderr, "\t%-10s\t%s\n", "build:", build);
 
         fprintf(stderr, "\nLocate applicable CMVP certificates at\n");
-        fprintf(stderr, "    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=%.5s\n", vers);
+        if (strncmp(vers, "3.1.2", 5) == 0)
+                fprintf(stderr, "    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL&CertificateStatus=Active&CertificateNumber=4985\n");
+        else
+                fprintf(stderr, "    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=%.5s\n", vers);
 
         return;
  err:
