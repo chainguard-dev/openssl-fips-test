@@ -43,7 +43,16 @@ Checking OpenSSL lifecycle assurance.
 *** Running check: FIPS module is available...
     Running check: FIPS module is available... failed.
 *** Running check: EVP_default_properties_is_fips_enabled returns true... failed.
-*** Running check: verify unapproved cryptographic routines are not available by default (e.g. MD5)... failed.
+*** Running check: verify unapproved cryptographic routines are not available by default (e.g. HMAC-MD5)... failed.
+
+Public OpenSSL API for TLS and cryptographic routines (libssl.so & libcrypto.so):
+	name:     	OpenSSL 3.4.1 11 Feb 2025
+	version:  	3.4.1
+	full-version:	3.4.1
+	built-on: 	Thu Apr  3 08:48:37 2025 UTC
+
+FIPS cryptographic Module details (fips.so):
+	Failed to retrieve cryptographic module version information
 ```
 
 Example of systems using OpenSSL Project CMVP certificate:
@@ -83,7 +92,7 @@ Pass
     RSA_Decrypt : (KAT_AsymmetricCipher) : Pass
     Running check: FIPS module is available... passed.
 *** Running check: EVP_default_properties_is_fips_enabled returns true... passed.
-*** Running check: verify unapproved cryptographic routines are not available by default (e.g. MD5)... passed.
+*** Running check: verify unapproved cryptographic routines are not available by default (e.g. HMAC-MD5)... passed.
 
 Lifecycle assurance satisfied.
 Module details:
@@ -130,7 +139,7 @@ Pass
     HMAC : (Module_Integrity) : Pass
     Running check: FIPS module is available... passed.
 *** Running check: EVP_default_properties_is_fips_enabled returns true... passed.
-*** Running check: verify unapproved cryptographic routines are not available by default (e.g. MD5)... passed.
+*** Running check: verify unapproved cryptographic routines are not available by default (e.g. HMAC-MD5)... passed.
 
 Lifecycle assurance satisfied.
 Module details:
