@@ -66,13 +66,15 @@ test_fips_module_is_enabled(void)
 }
 
 static bool
-test_md5_not_available(void)
+test_hmac_md5_not_available(void)
 {
-	EVP_MD *md5 = NULL;
+	size_t outlen = 0;
 
-	md5 = EVP_MD_fetch(NULL, "MD5", NULL);
-	if (md5 != NULL)
+	unsigned char *hmac_md5 = EVP_Q_mac(NULL, "HMAC", NULL, "MD5", NULL, "12345678901234", 14, NULL, 0, NULL, 0, &outlen);
+	if (hmac_md5 != NULL) {
+		free(hmac_md5);
 		return false;
+	}
 
 	return true;
 }
@@ -89,9 +91,9 @@ static const struct test_ tests[] = {
 		.test_fn = test_fips_module_is_enabled,
 	},
 	{
-		.name = "verify unapproved cryptographic routines are not available by default (e.g. MD5)",
+		.name = "verify unapproved cryptographic routines are not available by default (e.g. HMAC-MD5)",
 		.expected = true,
-		.test_fn = test_md5_not_available,
+		.test_fn = test_hmac_md5_not_available,
 	},
 };
 
