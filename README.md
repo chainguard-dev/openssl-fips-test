@@ -6,17 +6,16 @@ to use its FIPS module.
 ## Caveats
 
 This tool can only detect whether or not OpenSSL is properly configured:
-applications and languages must be built to make use of libcrypto in order
-for the OpenSSL FIPS configuration to actually be useful.
+applications and languages must be built to make use of shared linked libcrypto
+in order for the OpenSSL FIPS configuration to actually be useful.
 
-This tool does not validate whether any other element in an overall
-delivered configuration is, or is not, FIPS 140-2/140-3 compliant.  It
-only tests whether OpenSSL is properly configured and making use of the
-FIPS module correctly.
+This tool does not validate whether any other element in an overall delivered
+configuration is, or is not, FIPS 140-3 compliant.  It only tests whether
+OpenSSL is properly configured and making use of the FIPS module correctly.
 
 ## Usage
 
-On Wolfi, simply install the `openssl-fips-test` package and run it.
+All Chainguard FIPS images ship `openssl-fips-test` preinstalled.
 
 On other systems, run `make` and `make install` as usual with whatever
 escalation tool you normally use.  You must have the OpenSSL development
@@ -34,119 +33,93 @@ used.
 It also retrieves FIPS module information and returns CMVP search URL where one
 should be able to find applicable certificates.
 
+It also provides a summary of available algorithms, which is useful to compare
+different CMVP modules and the algorithms they offer.
+
 ## Example output
 
-Uncertified systems will typically report this:
+Systems without a FIPS provider will typically report this:
 
 ```
+$ openssl-fips-test
 Checking OpenSSL lifecycle assurance.
-*** Running check: FIPS module is available...
-    Running check: FIPS module is available... failed.
-*** Running check: EVP_default_properties_is_fips_enabled returns true... failed.
-*** Running check: verify unapproved cryptographic routines are not available by default (e.g. HMAC-MD5)... failed.
 
-Public OpenSSL API for TLS and cryptographic routines (libssl.so & libcrypto.so):
-	name:     	OpenSSL 3.4.1 11 Feb 2025
-	version:  	3.4.1
-	full-version:	3.4.1
-	built-on: 	Thu Apr  3 08:48:37 2025 UTC
+	✗ Check FIPS cryptographic module is available... FAILED.
+	✗ Check FIPS approved only mode (EVP_default_properties_is_fips_enabled)... FAILED.
+	✗ Check non-approved algorithm blocked (HMAC-MD5)... FAILED.
 
-FIPS cryptographic Module details (fips.so):
-	Failed to retrieve cryptographic module version information
+Failed to retrieve cryptographic module version information
 ```
 
-Example of systems using OpenSSL Project CMVP certificate:
+Example of systems using OpenSSL Project FIPS provider:
 
 ```
-# ./openssl-fips-test
+$ openssl-fips-test
 Checking OpenSSL lifecycle assurance.
-*** Running check: FIPS module is available...
-    HMAC : (Module_Integrity) : Pass
-    SHA1 : (KAT_Digest) : Pass
-    SHA2 : (KAT_Digest) : Pass
-    SHA3 : (KAT_Digest) : Pass
-    TDES : (KAT_Cipher) : Pass
-    AES_GCM : (KAT_Cipher) : Pass
-    AES_ECB_Decrypt : (KAT_Cipher) : Pass
-    RSA : (KAT_Signature) :     RNG : (Continuous_RNG_Test) : Pass
-Pass
-    ECDSA : (PCT_Signature) : Pass
-    DSA : (PCT_Signature) : Pass
-    TLS13_KDF_EXTRACT : (KAT_KDF) : Pass
-    TLS13_KDF_EXPAND : (KAT_KDF) : Pass
-    TLS12_PRF : (KAT_KDF) : Pass
-    PBKDF2 : (KAT_KDF) : Pass
-    SSHKDF : (KAT_KDF) : Pass
-    KBKDF : (KAT_KDF) : Pass
-    HKDF : (KAT_KDF) : Pass
-    SSKDF : (KAT_KDF) : Pass
-    X963KDF : (KAT_KDF) : Pass
-    X942KDF : (KAT_KDF) : Pass
-    HASH : (DRBG) : Pass
-    CTR : (DRBG) : Pass
-    HMAC : (DRBG) : Pass
-    DH : (KAT_KA) : Pass
-    ECDH : (KAT_KA) : Pass
-    RSA_Encrypt : (KAT_AsymmetricCipher) : Pass
-    RSA_Decrypt : (KAT_AsymmetricCipher) : Pass
-    RSA_Decrypt : (KAT_AsymmetricCipher) : Pass
-    Running check: FIPS module is available... passed.
-*** Running check: EVP_default_properties_is_fips_enabled returns true... passed.
-*** Running check: verify unapproved cryptographic routines are not available by default (e.g. HMAC-MD5)... passed.
 
-Lifecycle assurance satisfied.
-Module details:
+	✓ Self-test KAT_Integrity HMAC ... passed.
+	✓ Self-test Module_Integrity HMAC ... passed.
+	✓ Self-test KAT_Digest SHA1 ... passed.
+	✓ Self-test KAT_Digest SHA2 ... passed.
+	✓ Self-test KAT_Digest SHA3 ... passed.
+	✓ Self-test KAT_Cipher AES_GCM ... passed.
+	✓ Self-test KAT_Cipher AES_ECB_Decrypt ... passed.
+	✓ Self-test Continuous_RNG_Test RNG ... passed.
+	✓ Self-test KAT_Signature RSA ... passed.
+	✓ Self-test KAT_Signature ECDSA ... passed.
+	✓ Self-test KAT_Signature DSA ... passed.
+	✓ Self-test KAT_KDF TLS13_KDF_EXTRACT ... passed.
+	✓ Self-test KAT_KDF TLS13_KDF_EXPAND ... passed.
+	✓ Self-test KAT_KDF TLS12_PRF ... passed.
+	✓ Self-test KAT_KDF PBKDF2 ... passed.
+	✓ Self-test KAT_KDF SSHKDF ... passed.
+	✓ Self-test KAT_KDF KBKDF ... passed.
+	✓ Self-test KAT_KDF HKDF ... passed.
+	✓ Self-test KAT_KDF SSKDF ... passed.
+	✓ Self-test KAT_KDF X963KDF ... passed.
+	✓ Self-test KAT_KDF X942KDF ... passed.
+	✓ Self-test DRBG HASH ... passed.
+	✓ Self-test DRBG CTR ... passed.
+	✓ Self-test DRBG HMAC ... passed.
+	✓ Self-test KAT_KA DH ... passed.
+	✓ Self-test KAT_KA ECDH ... passed.
+	✓ Self-test KAT_AsymmetricCipher RSA_Encrypt ... passed.
+	✓ Self-test KAT_AsymmetricCipher RSA_Decrypt ... passed.
+	✓ Self-test KAT_AsymmetricCipher RSA_Decrypt ... passed.
+
+	✓ 29 out of 29 self-tests passed.
+	✓ Check FIPS cryptographic module is available... passed.
+	✓ Check FIPS approved only mode (EVP_default_properties_is_fips_enabled)... passed.
+	✓ Check non-approved algorithm blocked (HMAC-MD5)... passed.
+
+Digests available for non-security use as per FIPS 140-3 I.G. 2.4.A (fips=no):
+	✓ MD5
+	✓ SHA1
+
+Available approved algorithms for security purposes (fips=yes):
+	✗ MD5
+	✓ SHA-1
+	✓ SHA-2
+	✓ SHA-3
+	✓ DSA
+	✓ RSA
+	✓ ECDSA
+	✗ DetECDSA
+	✗ Ed25519
+	✗ ML-DSA
+	✗ SLH-DSA
+	✗ ML-KEM
+	✗ X25519MLKEM768
+	✗ SecP256r1MLKEM768
+
+Public OpenSSL API (libssl.so & libcrypto.so):
+	name:     	OpenSSL 3.6.0 1 Oct 2025
+	version:  	3.6.0
+
+FIPS cryptographic module provider details (fips.so):
 	name:     	OpenSSL FIPS Provider
-	version:  	3.0.9
-	build:    	3.0.9
+	version:  	3.1.2
+	build:    	3.1.2
 
-Locate applicable CMVP certificates at
-    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=3.0.9
-```
-
-Example output on Ubuntu Pro FIPS instance:
-
-```
-./openssl-fips-test
-Checking OpenSSL lifecycle assurance.
-*** Running check: FIPS module is available...
-    SHA1 : (KAT_Digest) : Pass
-    SHA2 : (KAT_Digest) : Pass
-    SHA3 : (KAT_Digest) : Pass
-    AES_GCM : (KAT_Cipher) : Pass
-    AES_ECB_Decrypt : (KAT_Cipher) : Pass
-    RSA : (KAT_Signature) :     RNG : (Continuous_RNG_Test) : Pass
-    RNG : (Continuous_RNG_Test) : Pass
-    RNG : (Continuous_RNG_Test) : Pass
-Pass
-    ECDSA : (KAT_Signature) : Pass
-    ECDSA : (KAT_Signature) : Pass
-    TLS13_KDF_EXTRACT : (KAT_KDF) : Pass
-    TLS13_KDF_EXPAND : (KAT_KDF) : Pass
-    TLS12_PRF : (KAT_KDF) : Pass
-    PBKDF2 : (KAT_KDF) : Pass
-    SSHKDF : (KAT_KDF) : Pass
-    KBKDF : (KAT_KDF) : Pass
-    HKDF : (KAT_KDF) : Pass
-    SSKDF : (KAT_KDF) : Pass
-    X963KDF : (KAT_KDF) : Pass
-    X942KDF : (KAT_KDF) : Pass
-    HASH : (DRBG) : Pass
-    CTR : (DRBG) : Pass
-    HMAC : (DRBG) : Pass
-    DH : (KAT_KA) : Pass
-    ECDH : (KAT_KA) : Pass
-    HMAC : (Module_Integrity) : Pass
-    Running check: FIPS module is available... passed.
-*** Running check: EVP_default_properties_is_fips_enabled returns true... passed.
-*** Running check: verify unapproved cryptographic routines are not available by default (e.g. HMAC-MD5)... passed.
-
-Lifecycle assurance satisfied.
-Module details:
-	name:     	Ubuntu 22.04 OpenSSL Cryptographic Module
-	version:  	3.0.5-0ubuntu0.1+Fips2.1
-	build:    	3.0.5-0ubuntu0.1+Fips2.1
-
-Locate applicable CMVP certificates at
-    https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL&CertificateStatus=Active&ValidationYear=0&SoftwareVersions=3.0.5
+Locate applicable CMVP certificate(s) at: CMVP #4985
 ```
