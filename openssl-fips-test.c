@@ -378,7 +378,7 @@ static void print_module_version(void) {
             && strncmp(vers, "3.1.2", 5) == 0) {
 		fprintf(stderr, "%s%s%s%s%s%s%s\n",
                         OSC_8_START,
-                        "https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL&CertificateStatus=Active&CertificateNumber=5102",
+                        "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5102",
                         OSC_8_END,
                         "CMVP #5102",
                         OSC_8_START,
@@ -391,7 +391,7 @@ static void print_module_version(void) {
             && strncmp(vers, "3.1.2", 5) == 0) {
 		fprintf(stderr, "%s%s%s%s%s%s%s\n",
                         OSC_8_START,
-                        "https://csrc.nist.gov/projects/cryptographic-module-validation-program/validated-modules/search?SearchMode=Advanced&ModuleName=OpenSSL&CertificateStatus=Active&CertificateNumber=4985",
+                        "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4985",
                         OSC_8_END,
                         "CMVP #4985",
                         OSC_8_START,
