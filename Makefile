@@ -1,9 +1,9 @@
 PROG = openssl-fips-test
 SRCS = openssl-fips-test.c
-CFLAGS += -Wall -std=gnu1x -O2 -D_FORTIFY_SOURCE=3
-CFLAGS += $(shell pkg-config --cflags openssl)
+CFLAGS += -Wall -std=gnu1x -O3 -D_FORTIFY_SOURCE=3
+CFLAGS += $(shell pkg-config --cflags libcrypto)
 INSTALL ?= install
-LIBS = $(shell pkg-config --libs openssl)
+LIBS = $(shell pkg-config --libs libcrypto)
 OBJS = ${SRCS:.c=.o}
 
 all: ${PROG}
