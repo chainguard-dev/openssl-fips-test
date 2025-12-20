@@ -121,5 +121,5 @@ FIPS cryptographic module provider details (fips.so):
 	version:  	3.1.2
 	build:    	3.1.2
 
-Locate applicable CMVP certificate(s) at: CMVP #4985
+Locate applicable CMVP certificate(s) at: CMVP #5102
 ```
