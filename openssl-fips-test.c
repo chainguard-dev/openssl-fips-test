@@ -267,13 +267,13 @@ static void print_non_security_digests(void) {
 		if (digest != NULL) {
 
 			fprintf(stderr, GREEN_CHECK);
-			fprintf(stderr, " %s", non_approved_digests[i].name);
+			fprintf(stderr, "%s", non_approved_digests[i].name);
 			EVP_MD_free(digest);
 			digest = NULL;
 		} else {
 			fprintf(stderr, "\t");
 			fprintf(stderr, RED_CROSS);
-			fprintf(stderr, " %s", non_approved_digests[i].name);
+			fprintf(stderr, "%s", non_approved_digests[i].name);
 			fprintf(stderr, "- expect failures with all public cloud SDKs");
 		}
 		fprintf(stderr, "\n");
@@ -372,20 +372,42 @@ static void print_module_version(void) {
 	if (OSSL_PARAM_modified(params + 2))
 		fprintf(stderr, "\t%-10s\t%s\n", "build:", build);
 
-	fprintf(stderr, "\nLocate applicable CMVP certificate(s) at: ");
+	fprintf(stderr, "\nLocate applicable certificate(s) at: ");
         /* NIST CMVP search still does not have a version search working */
-        if (strcmp(name, "Chainguard FIPS Provider for OpenSSL") == 0
-            && strncmp(vers, "3.1.2", 5) == 0) {
-		fprintf(stderr, "%s%s%s%s%s%s%s\n",
-                        OSC_8_START,
-                        "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5102",
-                        OSC_8_END,
-                        "CMVP #5102",
-                        OSC_8_START,
-                        "",
-                        OSC_8_END
-                );
-                return;
+        if (strcmp(name, "Chainguard FIPS Provider for OpenSSL") == 0) {
+                if (strncmp(vers, "3.1.2", 5) == 0) {
+                        fprintf(stderr, "%s%s%s%s%s%s%s\n",
+                                OSC_8_START,
+                                "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5102",
+                                OSC_8_END,
+                                "CMVP #5102",
+                                OSC_8_START,
+                                "",
+                                OSC_8_END
+                        );
+                        return;
+                }
+                if (strncmp(vers, "3.4.0", 5) == 0) {
+                        fprintf(stderr, "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s\n",
+                                OSC_8_START,
+                                "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5132",
+                                OSC_8_END,
+                                "CMVP #5132",
+                                OSC_8_START,
+                                "",
+                                OSC_8_END,
+                                " (with ",
+                                OSC_8_START,
+                                "https://csrc.nist.gov/projects/cryptographic-module-validation-program/entropy-validations/certificate/191",
+                                OSC_8_END,
+                                "entropy #E191",
+                                OSC_8_START,
+                                "",
+                                OSC_8_END,
+                                ")"
+                        );
+                        return;
+                }
         }
         if (strcmp(name, "OpenSSL FIPS Provider") == 0
             && strncmp(vers, "3.1.2", 5) == 0) {
@@ -450,9 +472,12 @@ main(int argc, const char *argv[])
 	if (rc == EXIT_SUCCESS) {
 		print_non_security_digests();
 		//print_security_digests();
-                print_security_features();
+		print_security_features();
 		print_base_version();
 		print_module_version();
+		fprintf(stderr, BOLD_GREEN);
+		fprintf(stderr, "\nLifecycle assurance satisfied.");
+		fprintf(stderr, RESET);
 		fprintf(stderr, "\n");
 	} else {
 		fprintf(stderr, BOLD_RED);

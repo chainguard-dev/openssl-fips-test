@@ -6,32 +6,34 @@ to use its FIPS module.
 ## Caveats
 
 This tool can only detect whether or not OpenSSL is properly configured:
-applications and languages must be built to make use of shared linked libcrypto
-in order for the OpenSSL FIPS configuration to actually be useful.
+applications and languages must be built to make use of shared linked system
+libcrypto in order for the OpenSSL FIPS configuration to be used.
 
 This tool does not validate whether any other element in an overall delivered
-configuration is, or is not, FIPS 140-3 compliant.  It only tests whether
-OpenSSL is properly configured and making use of the FIPS module correctly.
+configuration is, or is not, FIPS 140-3 compliant. It only tests whether
+OpenSSL is properly configured and is making use of the FIPS module correctly.
 
 ## Usage
 
 All Chainguard FIPS images ship `openssl-fips-test` preinstalled.
 
-On other systems, run `make` and `make install` as usual with whatever
-escalation tool you normally use.  You must have the OpenSSL development
-headers installed in order to build this tool, as well as a C compiler.
+On other systems, run `make` and `make install`.  You must have the OpenSSL
+development headers installed in order to build this tool, as well as a C
+compiler.
 
 ## About this tool
 
 Prior to loading any providers, a callback is added to capture output of KAT
 (known answer tests) selftests.
 
-It then loads default OpenSSL library contects, and verifies that a FIPS
-provider is loaded. And checks that by default FIPS variants of algorithms are
-used.
+It then loads default OpenSSL library context, and verifies that a FIPS
+provider is loaded. It checks that by default the FIPS variants of algorithms
+are used.
 
-It also retrieves FIPS module information and returns CMVP search URL where one
-should be able to find applicable certificates.
+It also retrieves FIPS module information and returns CMVP & ESV certificates
+where known, or a CMVP search URL where one should be able to find applicable
+certificates. If certificates cannot be located with matching versions, one is
+using non-validated module.
 
 It also provides a summary of available algorithms, which is useful to compare
 different CMVP modules and the algorithms they offer.
@@ -59,21 +61,20 @@ Checking OpenSSL lifecycle assurance.
 
 	✓ Self-test KAT_Integrity HMAC ... passed.
 	✓ Self-test Module_Integrity HMAC ... passed.
-	✓ Self-test KAT_Digest SHA1 ... passed.
 	✓ Self-test KAT_Digest SHA2 ... passed.
 	✓ Self-test KAT_Digest SHA3 ... passed.
 	✓ Self-test KAT_Cipher AES_GCM ... passed.
 	✓ Self-test KAT_Cipher AES_ECB_Decrypt ... passed.
-	✓ Self-test Continuous_RNG_Test RNG ... passed.
 	✓ Self-test KAT_Signature RSA ... passed.
 	✓ Self-test KAT_Signature ECDSA ... passed.
-	✓ Self-test KAT_Signature DSA ... passed.
+	✓ Self-test KAT_Signature EDDSA ... passed.
+	✓ Self-test KAT_Signature EDDSA ... passed.
 	✓ Self-test KAT_KDF TLS13_KDF_EXTRACT ... passed.
 	✓ Self-test KAT_KDF TLS13_KDF_EXPAND ... passed.
 	✓ Self-test KAT_KDF TLS12_PRF ... passed.
 	✓ Self-test KAT_KDF PBKDF2 ... passed.
-	✓ Self-test KAT_KDF SSHKDF ... passed.
 	✓ Self-test KAT_KDF KBKDF ... passed.
+	✓ Self-test KAT_KDF KBKDF_KMAC ... passed.
 	✓ Self-test KAT_KDF HKDF ... passed.
 	✓ Self-test KAT_KDF SSKDF ... passed.
 	✓ Self-test KAT_KDF X963KDF ... passed.
@@ -83,11 +84,8 @@ Checking OpenSSL lifecycle assurance.
 	✓ Self-test DRBG HMAC ... passed.
 	✓ Self-test KAT_KA DH ... passed.
 	✓ Self-test KAT_KA ECDH ... passed.
-	✓ Self-test KAT_AsymmetricCipher RSA_Encrypt ... passed.
-	✓ Self-test KAT_AsymmetricCipher RSA_Decrypt ... passed.
-	✓ Self-test KAT_AsymmetricCipher RSA_Decrypt ... passed.
 
-	✓ 29 out of 29 self-tests passed.
+	✓ 25 out of 25 self-tests passed.
 	✓ Check FIPS cryptographic module is available... passed.
 	✓ Check FIPS approved only mode (EVP_default_properties_is_fips_enabled)... passed.
 	✓ Check non-approved algorithm blocked (HMAC-MD5)... passed.
@@ -101,11 +99,11 @@ Available approved algorithms for security purposes (fips=yes):
 	✓ SHA-1
 	✓ SHA-2
 	✓ SHA-3
-	✓ DSA
+	✗ DSA
 	✓ RSA
 	✓ ECDSA
+	✓ Ed25519
 	✗ DetECDSA
-	✗ Ed25519
 	✗ ML-DSA
 	✗ SLH-DSA
 	✗ ML-KEM
@@ -117,9 +115,11 @@ Public OpenSSL API (libssl.so & libcrypto.so):
 	version:  	3.6.0
 
 FIPS cryptographic module provider details (fips.so):
-	name:     	OpenSSL FIPS Provider
-	version:  	3.1.2
-	build:    	3.1.2
+	name:     	Chainguard FIPS Provider for OpenSSL
+	version:  	3.4.0
+	build:    	3.4.0-r4
 
-Locate applicable CMVP certificate(s) at: CMVP #4985
+Locate applicable certificate(s) at: CMVP #5132 (with entropy #E191)
+
+Lifecycle assurance satisfied.
 ```
