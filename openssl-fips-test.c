@@ -374,18 +374,31 @@ static void print_module_version(void) {
 
 	fprintf(stderr, "\nLocate applicable CMVP certificate(s) at: ");
         /* NIST CMVP search still does not have a version search working */
-        if (strcmp(name, "Chainguard FIPS Provider for OpenSSL") == 0
-            && strncmp(vers, "3.1.2", 5) == 0) {
-		fprintf(stderr, "%s%s%s%s%s%s%s\n",
-                        OSC_8_START,
-                        "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5102",
-                        OSC_8_END,
-                        "CMVP #5102",
-                        OSC_8_START,
-                        "",
-                        OSC_8_END
-                );
-                return;
+        if (strcmp(name, "Chainguard FIPS Provider for OpenSSL") == 0) {
+                if (strncmp(vers, "3.1.2", 5) == 0) {
+                        fprintf(stderr, "%s%s%s%s%s%s%s\n",
+                                OSC_8_START,
+                                "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5102",
+                                OSC_8_END,
+                                "CMVP #5102",
+                                OSC_8_START,
+                                "",
+                                OSC_8_END
+                        );
+                        return;
+                }
+                if (strncmp(vers, "3.4.0", 5) == 0) {
+                        fprintf(stderr, "%s%s%s%s%s%s%s\n",
+                                OSC_8_START,
+                                "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5132",
+                                OSC_8_END,
+                                "CMVP #5132",
+                                OSC_8_START,
+                                "",
+                                OSC_8_END
+                        );
+                        return;
+                }
         }
         if (strcmp(name, "OpenSSL FIPS Provider") == 0
             && strncmp(vers, "3.1.2", 5) == 0) {
