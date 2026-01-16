@@ -117,5 +117,7 @@ FIPS cryptographic module provider details (fips.so):
 	version:  	3.4.0
 	build:    	3.4.0-r4
 
-Locate applicable CMVP certificate(s) at: CMVP #5132
+Locate applicable certificate(s) at: CMVP #5132 (with entropy #E191)
+
+Lifecycle assurance satisfied.
 ```

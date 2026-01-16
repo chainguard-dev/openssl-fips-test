@@ -372,7 +372,7 @@ static void print_module_version(void) {
 	if (OSSL_PARAM_modified(params + 2))
 		fprintf(stderr, "\t%-10s\t%s\n", "build:", build);
 
-	fprintf(stderr, "\nLocate applicable CMVP certificate(s) at: ");
+	fprintf(stderr, "\nLocate applicable certificate(s) at: ");
         /* NIST CMVP search still does not have a version search working */
         if (strcmp(name, "Chainguard FIPS Provider for OpenSSL") == 0) {
                 if (strncmp(vers, "3.1.2", 5) == 0) {
@@ -388,14 +388,23 @@ static void print_module_version(void) {
                         return;
                 }
                 if (strncmp(vers, "3.4.0", 5) == 0) {
-                        fprintf(stderr, "%s%s%s%s%s%s%s\n",
+                        fprintf(stderr, "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s\n",
                                 OSC_8_START,
                                 "https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/5132",
                                 OSC_8_END,
                                 "CMVP #5132",
                                 OSC_8_START,
                                 "",
-                                OSC_8_END
+                                OSC_8_END,
+                                " (with ",
+                                OSC_8_START,
+                                "https://csrc.nist.gov/projects/cryptographic-module-validation-program/entropy-validations/certificate/191",
+                                OSC_8_END,
+                                "entropy #E191",
+                                OSC_8_START,
+                                "",
+                                OSC_8_END,
+                                ")"
                         );
                         return;
                 }
