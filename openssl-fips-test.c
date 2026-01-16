@@ -267,13 +267,13 @@ static void print_non_security_digests(void) {
 		if (digest != NULL) {
 
 			fprintf(stderr, GREEN_CHECK);
-			fprintf(stderr, " %s", non_approved_digests[i].name);
+			fprintf(stderr, "%s", non_approved_digests[i].name);
 			EVP_MD_free(digest);
 			digest = NULL;
 		} else {
 			fprintf(stderr, "\t");
 			fprintf(stderr, RED_CROSS);
-			fprintf(stderr, " %s", non_approved_digests[i].name);
+			fprintf(stderr, "%s", non_approved_digests[i].name);
 			fprintf(stderr, "- expect failures with all public cloud SDKs");
 		}
 		fprintf(stderr, "\n");

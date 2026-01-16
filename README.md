@@ -89,8 +89,8 @@ Checking OpenSSL lifecycle assurance.
 	✓ Check non-approved algorithm blocked (HMAC-MD5)... passed.
 
 Digests available for non-security use as per FIPS 140-3 I.G. 2.4.A (fips=no):
-	✓  MD5
-	✓  SHA1
+	✓ MD5
+	✓ SHA1
 
 Available approved algorithms for security purposes (fips=yes):
 	✗ MD5
