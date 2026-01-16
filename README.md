@@ -6,32 +6,34 @@ to use its FIPS module.
 ## Caveats
 
 This tool can only detect whether or not OpenSSL is properly configured:
-applications and languages must be built to make use of shared linked libcrypto
-in order for the OpenSSL FIPS configuration to actually be useful.
+applications and languages must be built to make use of shared linked system
+libcrypto in order for the OpenSSL FIPS configuration to be used.
 
 This tool does not validate whether any other element in an overall delivered
-configuration is, or is not, FIPS 140-3 compliant.  It only tests whether
-OpenSSL is properly configured and making use of the FIPS module correctly.
+configuration is, or is not, FIPS 140-3 compliant. It only tests whether
+OpenSSL is properly configured and is making use of the FIPS module correctly.
 
 ## Usage
 
 All Chainguard FIPS images ship `openssl-fips-test` preinstalled.
 
-On other systems, run `make` and `make install` as usual with whatever
-escalation tool you normally use.  You must have the OpenSSL development
-headers installed in order to build this tool, as well as a C compiler.
+On other systems, run `make` and `make install`.  You must have the OpenSSL
+development headers installed in order to build this tool, as well as a C
+compiler.
 
 ## About this tool
 
 Prior to loading any providers, a callback is added to capture output of KAT
 (known answer tests) selftests.
 
-It then loads default OpenSSL library contects, and verifies that a FIPS
-provider is loaded. And checks that by default FIPS variants of algorithms are
-used.
+It then loads default OpenSSL library context, and verifies that a FIPS
+provider is loaded. It checks that by default the FIPS variants of algorithms
+are used.
 
-It also retrieves FIPS module information and returns CMVP search URL where one
-should be able to find applicable certificates.
+It also retrieves FIPS module information and returns CMVP & ESV certificates
+where known, or a CMVP search URL where one should be able to find applicable
+certificates. If certificates cannot be located with matching versions, one is
+using non-validated module.
 
 It also provides a summary of available algorithms, which is useful to compare
 different CMVP modules and the algorithms they offer.
