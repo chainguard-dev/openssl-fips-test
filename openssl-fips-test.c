@@ -463,9 +463,12 @@ main(int argc, const char *argv[])
 	if (rc == EXIT_SUCCESS) {
 		print_non_security_digests();
 		//print_security_digests();
-                print_security_features();
+		print_security_features();
 		print_base_version();
 		print_module_version();
+		fprintf(stderr, BOLD_GREEN);
+		fprintf(stderr, "\nLifecycle assurance satisfied.");
+		fprintf(stderr, RESET);
 		fprintf(stderr, "\n");
 	} else {
 		fprintf(stderr, BOLD_RED);
