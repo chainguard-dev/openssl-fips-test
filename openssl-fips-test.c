@@ -27,7 +27,7 @@
 struct test_ {
 	const char *name;
 	const bool expected;
-	const bool (*test_fn)(void);
+	bool (*test_fn)(void);
 };
 
 struct digest_ {
